@@ -24,19 +24,26 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses || true
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          version: '3.27.4'
 
       - name: Install Flet and dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install flet==0.27.6
 
       - name: Build Android APK
         run: |
-          flet build apk --project "ProPortScanner" --product "Pro Port Scanner" --org "com.scanner.pro"
+          flet build apk --project "ProPortScanner" --product "Pro Port Scanner" --org "com.scanner.pro" --verbose
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
